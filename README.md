@@ -9,7 +9,7 @@ Este proyecto utiliza **Docker Compose** para levantar todos los microservicios 
 docker-compose up --build
 
 # 🔄 Ejecutar en segundo plano
-docker-compose up -d --build
+docker-compose up --build -d
 
 # Detener y eliminar contenedores
-docker-compose down
+docker-compose down -v
