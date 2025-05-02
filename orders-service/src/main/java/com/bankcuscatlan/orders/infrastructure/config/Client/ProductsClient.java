@@ -47,19 +47,19 @@ public class ProductsClient {
         return webClient.get()
                 .uri(path + "/{id}", id)
                 .retrieve()
-                .onStatus(HttpStatusCode::is4xxClientError, response -> {
-                    if (response.statusCode() == HttpStatus.NOT_FOUND) {
+                .onStatus( HttpStatusCode::is4xxClientError, response -> {
+                    if ( response.statusCode() == HttpStatus.NOT_FOUND ) {
                         log.error("Product with ID {} not found", id);
-                        return Mono.error(new NotFoundException("Product with ID " + id + " not found"));
+                        return Mono.error( new NotFoundException("Product with ID " + id + " not found") );
                     }
                     log.error("Error search product {}. HTTP code: {}", id, response.statusCode());
-                    return Mono.error(new NotFoundException("Product invalid. Code: " + response.statusCode()));
+                    return Mono.error( new NotFoundException("Product invalid. Code: " + response.statusCode()) );
                 })
-                .onStatus(HttpStatusCode::is5xxServerError, response -> {
+                .onStatus( HttpStatusCode::is5xxServerError, response -> {
                     log.error("Product service ServiceUnavailable - CodeError {}", response.statusCode());
                     return Mono.error(new ServiceUnavailableException("Product service ServiceUnavailable"));
                 })
-                .bodyToMono(new ParameterizedTypeReference<ResponseDTO<ProductDTO>>() {})
+                .bodyToMono( new ParameterizedTypeReference<ResponseDTO<ProductDTO>>() {} )
                 .doOnSubscribe(sub -> log.info("Calling product service: {}{}", host, path + "/" + id))
                 .doOnNext(response -> log.info("Product found: {}", response));
 

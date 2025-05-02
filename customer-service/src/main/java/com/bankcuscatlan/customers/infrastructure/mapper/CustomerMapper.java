@@ -9,8 +9,8 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface CustomerMapper {
 
-    @Mapping(target = "id", source = "id")
-    @Mapping(target = "firsname", source = "firstName")
-    @Mapping(target = "lastname", source = "lastName")
+    @Mapping(target = "id",         source = "id")
+    @Mapping(target = "firsname",   source = "firstName")
+    @Mapping(target = "lastname",   source = "lastName")
     CustomerDTO toDTO(Customer customer);
 }

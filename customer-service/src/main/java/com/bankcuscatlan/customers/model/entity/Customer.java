@@ -1,12 +1,13 @@
 package com.bankcuscatlan.customers.model.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Table(name = "PRUEBA_CUSTOMER")
+@Table(name = "CUSTOMER")
 @Entity
 @Data
 public class Customer {

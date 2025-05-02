@@ -46,6 +46,21 @@ public class PaymentImpl implements IPayment {
 
     }
 
+    @Override
+    public ResponseDTO<ResponsePaymentDTO> getPayments(RequestPaymentDTO requestPaymentDTO) {
+
+        Payment payment = paymentRepository.findByOrderId(requestPaymentDTO.getOrderId());
+        ResponsePaymentDTO responsePaymentDTO = paymentMapper.toResponse(payment);
+        //PaymentResult result = context.executePayment(requestPaymentDTO);
+
+        return ResponseDTO.<ResponsePaymentDTO>builder()
+                .code(HttpStatus.CREATED)
+                .message("SUCCESS")
+                .data(responsePaymentDTO)
+                .build();
+
+    }
+
 
 
 

@@ -1,0 +1,97 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: CUSCATLAN
+      MYSQL_ROOT_PASSWORD: 
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 10s
+      retries: 12
+    command: --wait_timeout=28800 --interactive_timeout=28800 --max_connections=200
+
+  orders-service:
+    build:
+      context: ./orders-service
+    container_name: orders-service
+    environment:
+      DATASOURCE_URL: jdbc:mysql://mysql:3306/CUSCATLAN?allowPublicKeyRetrieval=true&useSSL=false&connectTimeout=30000&socketTimeout=30000
+      DATASOURCE_USERNAME: root
+      DATASOURCE_PASSWORD:
+
+    depends_on:
+      mysql:
+        condition: service_healthy
+    ports:
+      - "8082:8082"
+    networks:
+      - app-network
+    restart: on-failure 
+  product-service:
+    build:
+      context: ./product-service
+    container_name: product-service
+    environment:
+      DATASOURCE_URL: jdbc:mysql://mysql:3306/CUSCATLAN?allowPublicKeyRetrieval=true&useSSL=false&connectTimeout=30000&socketTimeout=30000
+      DATASOURCE_USERNAME: root
+      DATASOURCE_PASSWORD:
+    depends_on:
+      mysql:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    networks:
+      - app-network
+    restart: on-failure
+
+  customer-service:
+    build:
+      context: ./customer-service
+    container_name: customer-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/CUSCATLAN?allowPublicKeyRetrieval=true&useSSL=false&connectTimeout=30000&socketTimeout=30000
+      DATASOURCE_USERNAME: root
+      DATASOURCE_PASSWORD:
+    depends_on:
+      mysql:
+        condition: service_healthy
+    ports:
+      - "8081:8081"
+    networks:
+      - app-network
+    restart: on-failure
+
+  payment-service:
+    build:
+      context: ./payment-service
+    container_name: payment-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/CUSCATLAN?allowPublicKeyRetrieval=true&useSSL=false&connectTimeout=30000&socketTimeout=30000
+      DATASOURCE_USERNAME: root
+      DATASOURCE_PASSWORD:
+    depends_on:
+      mysql:
+        condition: service_healthy
+    ports:
+      - "8083:8083"
+    networks:
+      - app-network
+    restart: on-failure
+
+volumes:
+  mysql_data:
+
+networks:
+  app-network:
+    driver: bridge

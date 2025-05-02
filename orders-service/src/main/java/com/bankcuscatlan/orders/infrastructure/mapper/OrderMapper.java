@@ -14,9 +14,9 @@ import org.mapstruct.MappingTarget;
 )
 public interface OrderMapper {
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "date", expression = "java(java.time.LocalDateTime.now())")
-    @Mapping(target = "items", source = "products")
+    @Mapping(target = "id",         ignore      = true)
+    @Mapping(target = "date",       expression  = "java(java.time.LocalDateTime.now())")
+    @Mapping(target = "items",      source      = "products")
 
     Order toEntity(RequestOrderDTO dto);
 
@@ -24,9 +24,9 @@ public interface OrderMapper {
     @Mapping(target = "products", source = "items")
     RequestOrderDTO toDto(Order entity);
 
-    @Mapping(target = "products", source = "items")
-    @Mapping(target = "orderid", source = "id")
-    @Mapping(target = "customerid", source = "customerId")
+    @Mapping(target = "products",       source = "items")
+    @Mapping(target = "orderid",        source = "id")
+    @Mapping(target = "customerid",     source = "customerId")
     ResponseOrderDTO toResponseDto(Order entity);
 
     @AfterMapping

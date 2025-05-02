@@ -1,0 +1,8 @@
+openapi: 3.0.1
+info:
+  title: API Customers
+  description: Documentatión de Customer Service
+  version: 1.0.0
+servers:
+  - url: http://localhost:8081
+    description: Local Server

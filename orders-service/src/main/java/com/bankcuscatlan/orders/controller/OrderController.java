@@ -1,6 +1,8 @@
 package com.bankcuscatlan.orders.controller;
 
 
+import com.bankcuscatlan.orders.model.dto.payment.RequestPaymentDTO;
+import com.bankcuscatlan.orders.model.dto.payment.ResponsePaymentDTO;
 import com.bankcuscatlan.orders.model.dto.response.ResponseDTO;
 import com.bankcuscatlan.orders.model.dto.response.ResponseOrderDTO;
 import com.bankcuscatlan.orders.service.IOrder;
@@ -58,6 +60,14 @@ public class OrderController {
         log.info("Delete order: {}", id);
         return new ResponseEntity<>(
                 orderImp.deleteOrder(id),
+                HttpStatus.ACCEPTED);
+    }
+
+    @PostMapping(path = "/order/payment")
+    public ResponseEntity<ResponseDTO<ResponsePaymentDTO>> paymentOrder(@Valid @RequestBody RequestPaymentDTO request) {
+        log.info("Payment order: {}", request);
+        return new ResponseEntity<>(
+                orderImp.payOrder(request),
                 HttpStatus.ACCEPTED);
     }
 }
