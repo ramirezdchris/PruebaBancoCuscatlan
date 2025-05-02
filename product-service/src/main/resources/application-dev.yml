@@ -1,0 +1,63 @@
+fake-api:
+  host: https://fakestoreapi.com
+  #host: http://localhost:8081
+  path: /products
+
+logging:
+  level:
+    io.github.resilience4j: DEBUG
+    io.github.resilience4j.circuitbreaker: DEBUG
+
+feign:
+  client:
+    config:
+      default:
+        connect-timeout: 5000
+        read-timeout: 5000
+  circuitbreaker:
+    enabled: true
+
+
+spring:
+  cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: true
+
+
+
+
+resilience4j.retry:
+  instances:
+    fake-apiproducts:
+      max-attempts: 20
+      wait-duration: 3s
+      retry-exceptions:
+        - java.io.IOException
+        - org.springframework.web.client.ResourceAccessException
+        - feign.RetryableException
+        - java.net.ConnectException
+
+resilience4j.circuitbreaker:
+  instances:
+    fake-apiproducts:
+      register-health-indicator: true
+      sliding-window-type: COUNT_BASED
+      sliding-window-size: 100
+      minimum-number-of-calls: 1
+      permitted-number-of-calls-in-half-open-state: 10
+      automatic-transition-from-open-to-half-open-enabled: true
+      wait-duration-in-open-state: 30s
+      failure-rate-threshold: 100
+      event-consumer-buffer-size: 30
+      record-exceptions:
+        - java.io.IOException
+        - java.util.concurrent.TimeoutException
+        - org.springframework.web.client.HttpServerErrorException
+        - org.springframework.web.client.ResourceAccessException
+        - feign.RetryableException
+        - java.net.ConnectException
+
+
+
+
